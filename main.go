@@ -1,7 +1,9 @@
 package main
 
-import ()
+import (
+	"github.com/rpowelson12/Easypass/internal/config"
+)
 
 func main() {
-	println("Hello World")
+	startRepl()
 }
