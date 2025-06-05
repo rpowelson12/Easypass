@@ -1,4 +1,4 @@
-package internal
+package config
 
 import (
 	"encoding/json"
@@ -13,8 +13,8 @@ type Config struct {
 	CurrentUserName string `json:"current_user_name"`
 }
 
-func (cfg *Config) SetUser(username string) error {
-	cfg.CurrentUserName = username
+func (cfg *Config) SetUser(userName string) error {
+	cfg.CurrentUserName = userName
 	return write(*cfg)
 }
 
@@ -36,6 +36,7 @@ func Read() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+
 	return cfg, nil
 }
 
