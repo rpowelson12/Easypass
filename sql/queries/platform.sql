@@ -10,3 +10,15 @@ VALUES (
 )
 RETURNING *;
 
+-- name: GetPassword :one
+SELECT password FROM platform
+WHERE user_id = $1 
+AND platform = $2;
+
+-- name: GetPlatforms :many
+SELECT * FROM platform
+WHERE user_id = $1;
+
+-- name: DeletePlatform :exec
+DELETE FROM platform
+WHERE platform = $1;

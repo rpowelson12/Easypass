@@ -7,11 +7,12 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/atotto/clipboard"
 	"github.com/google/uuid"
 	"github.com/rpowelson12/Easypass/internal/database"
 )
 
-const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+="
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@%^*+="
 
 func generatePassword(length int) (string, error) {
 	password := make([]byte, length)
@@ -41,8 +42,6 @@ func handlerGenerate(s *state, cmd command) error {
 	user_id := user.ID
 	platform := cmd.Args[0]
 
-	fmt.Println(password)
-
 	platformObj, err := s.db.GeneratePassword(context.Background(), database.GeneratePasswordParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
@@ -54,8 +53,63 @@ func handlerGenerate(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("cannot generate platform object: %v", err)
 	}
+	clipboard.WriteAll(platformObj.Password)
+	fmt.Println("Password copied to clipboard")
 
-	fmt.Println(platformObj.Password)
+	return nil
+}
+
+func handlerGetPassword(s *state, cmd command) error {
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %v <platform>", cmd.Name)
+	}
+	platform := cmd.Args[0]
+	user_id, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("cannot get user id: %v", err)
+	}
+
+	password, err := s.db.GetPassword(context.Background(), database.GetPasswordParams{
+		Platform: platform,
+		UserID:   user_id.ID,
+	})
+
+	fmt.Println("Password copied to clipboard!")
+	clipboard.WriteAll(password)
+	return nil
+}
+
+func handlerGetPlatforms(s *state, cmd command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("usage: %v", cmd.Name)
+	}
+
+	user_id, err := s.db.GetUserId(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("cannot get user id: %v", err)
+	}
+
+	platforms, err := s.db.GetPlatforms(context.Background(), user_id)
+
+	for _, platform := range platforms {
+		fmt.Println(platform.Platform)
+	}
+
+	return nil
+}
+
+func handlerDeletePlatform(s *state, cmd command) error {
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %v <platform>", cmd.Name)
+	}
+
+	platform := cmd.Args[0]
+
+	err := s.db.DeletePlatform(context.Background(), platform)
+	if err != nil {
+		return fmt.Errorf("could not delete platform")
+	}
+	fmt.Printf("%s deleted successfully", platform)
 
 	return nil
 }

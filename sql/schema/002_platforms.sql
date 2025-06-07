@@ -6,7 +6,7 @@ CREATE TABLE platform (
     platform TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     user_id UUID NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- +goose Down

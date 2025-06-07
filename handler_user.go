@@ -41,7 +41,6 @@ func handlerRegister(s *state, cmd command) error {
 	}
 
 	fmt.Println("User created successfully:")
-	printUser(user)
 	return nil
 }
 
@@ -85,8 +84,18 @@ func handlerListUsers(s *state, cmd command) error {
 	return nil
 }
 
-func printUser(user database.User) {
-	fmt.Printf(" * ID: 		%v\n", user.ID)
-	fmt.Printf(" * Name: 	%v\n", user.Name)
-	fmt.Printf(" * Password: 	%v\n", user.Password)
+func handlerDeleteUser(s *state, cmd command) error {
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %v <user name>", cmd.Name)
+	}
+
+	userName := cmd.Args[0]
+	err := s.db.DeleteUser(context.Background(), userName)
+	if err != nil {
+		return fmt.Errorf("cannot delete user: %v", err)
+	}
+
+	fmt.Printf("Successfully deleted %s", userName)
+
+	return nil
 }

@@ -12,6 +12,16 @@ import (
 	"github.com/google/uuid"
 )
 
+const deletePlatform = `-- name: DeletePlatform :exec
+DELETE FROM platform
+WHERE platform = $1
+`
+
+func (q *Queries) DeletePlatform(ctx context.Context, platform string) error {
+	_, err := q.db.ExecContext(ctx, deletePlatform, platform)
+	return err
+}
+
 const generatePassword = `-- name: GeneratePassword :one
 INSERT INTO platform (id, created_at, updated_at, platform, password, user_id)
 VALUES (
@@ -53,4 +63,57 @@ func (q *Queries) GeneratePassword(ctx context.Context, arg GeneratePasswordPara
 		&i.UserID,
 	)
 	return i, err
+}
+
+const getPassword = `-- name: GetPassword :one
+SELECT password FROM platform
+WHERE user_id = $1 
+AND platform = $2
+`
+
+type GetPasswordParams struct {
+	UserID   uuid.UUID
+	Platform string
+}
+
+func (q *Queries) GetPassword(ctx context.Context, arg GetPasswordParams) (string, error) {
+	row := q.db.QueryRowContext(ctx, getPassword, arg.UserID, arg.Platform)
+	var password string
+	err := row.Scan(&password)
+	return password, err
+}
+
+const getPlatforms = `-- name: GetPlatforms :many
+SELECT id, created_at, updated_at, platform, password, user_id FROM platform
+WHERE user_id = $1
+`
+
+func (q *Queries) GetPlatforms(ctx context.Context, userID uuid.UUID) ([]Platform, error) {
+	rows, err := q.db.QueryContext(ctx, getPlatforms, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Platform
+	for rows.Next() {
+		var i Platform
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Platform,
+			&i.Password,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
