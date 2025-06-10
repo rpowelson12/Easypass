@@ -12,6 +12,7 @@ Out of so many password managers, why should you care about Easypass? Easypass i
 This installs the program within your PATH and allows you to use the commands anywhere in your file system.
 
 ```{"db_url":"postgres://<system_name>:@localhost:5432/easypass?sslmode=disable","current_user_name":""}```
+
 Ensure there is a file named ```.easypassconfig.json``` in the root of your system with the above code pasted in.
 
 ## Commands
