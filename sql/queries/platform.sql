@@ -22,3 +22,8 @@ WHERE user_id = $1;
 -- name: DeletePlatform :exec
 DELETE FROM platform
 WHERE platform = $1;
+
+-- name: UpdatePassword :exec
+UPDATE platform
+SET password=$1
+WHERE user_id=$2;

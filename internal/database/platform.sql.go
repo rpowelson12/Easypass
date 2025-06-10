@@ -117,3 +117,19 @@ func (q *Queries) GetPlatforms(ctx context.Context, userID uuid.UUID) ([]Platfor
 	}
 	return items, nil
 }
+
+const updatePassword = `-- name: UpdatePassword :exec
+UPDATE platform
+SET password=$1
+WHERE user_id=$2
+`
+
+type UpdatePasswordParams struct {
+	Password string
+	UserID   uuid.UUID
+}
+
+func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updatePassword, arg.Password, arg.UserID)
+	return err
+}

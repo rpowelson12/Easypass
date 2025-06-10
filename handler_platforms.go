@@ -53,9 +53,8 @@ func handlerGenerate(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("cannot generate platform object: %v", err)
 	}
-	clipboard.WriteAll(platformObj.Password)
-	fmt.Println("Password copied to clipboard")
 
+	copyToClipboard(platformObj.Password)
 	return nil
 }
 
@@ -74,8 +73,7 @@ func handlerGetPassword(s *state, cmd command) error {
 		UserID:   user_id.ID,
 	})
 
-	fmt.Println("Password copied to clipboard!")
-	clipboard.WriteAll(password)
+	copyToClipboard(password)
 	return nil
 }
 
@@ -112,4 +110,27 @@ func handlerDeletePlatform(s *state, cmd command) error {
 	fmt.Printf("%s deleted successfully", platform)
 
 	return nil
+}
+
+func handlerUpdatePassword(s *state, cmd command) error {
+	user_id, err := s.db.GetUserId(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("cannot get user id: %v", err)
+	}
+	newPassword, err := generatePassword(16)
+	if err != nil {
+		return fmt.Errorf("cannot generate new password: %v", err)
+	}
+
+	s.db.UpdatePassword(context.Background(), database.UpdatePasswordParams{
+		Password: newPassword,
+		UserID:   user_id,
+	})
+	copyToClipboard(newPassword)
+	return nil
+}
+
+func copyToClipboard(password string) {
+	fmt.Println("Password copied to clipboard!")
+	clipboard.WriteAll(password)
 }

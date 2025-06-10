@@ -4,32 +4,38 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"syscall"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/rpowelson12/Easypass/internal/database"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/term"
 )
 
 func handlerRegister(s *state, cmd command) error {
-	if len(cmd.Args) != 2 {
-		return fmt.Errorf("usage: %v <name> <password>", cmd.Name)
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %v <name>", cmd.Name)
 	}
 	name := cmd.Args[0]
-	password := cmd.Args[1]
+	fmt.Print("Enter password:")
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return fmt.Errorf("\nError reading password: %v\n", err)
+
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 4)
 	if err != nil {
 		return fmt.Errorf("cannot encrypt password: %v", err)
 	}
 
-	password = string(hashedPassword)
 	user, err := s.db.CreateUser(context.Background(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Name:      name,
-		Password:  password,
+		Password:  string(hashedPassword),
 	})
 	if err != nil {
 		return fmt.Errorf("couldn't create user: %w", err)
@@ -45,12 +51,17 @@ func handlerRegister(s *state, cmd command) error {
 }
 
 func handlerLogin(s *state, cmd command) error {
-	if len(cmd.Args) != 2 {
-		return fmt.Errorf("usage: %s <name> <password>", cmd.Name)
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %s <name>", cmd.Name)
 	}
 
 	name := cmd.Args[0]
-	password := cmd.Args[1]
+	fmt.Print("Enter password: ")
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return fmt.Errorf("\nError reading password: %v\n", err)
+
+	}
 
 	user, err := s.db.GetUser(context.Background(), name)
 	if err != nil {
