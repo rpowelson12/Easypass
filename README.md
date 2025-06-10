@@ -1,3 +1,6 @@
+![Go](https://img.shields.io/badge/Go-1.20+-00ADD8)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 # Easypass
 
 Easypass is a command line tool that will allow you to generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
