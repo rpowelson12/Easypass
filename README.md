@@ -23,6 +23,14 @@ in the root of your system with the above code pasted in. Ensure the postgres ur
 
 ```psql "postgres://<system_name>:@localhost:5432/easypass"```
 
+## ✨ Features
+- 🔐 Secure password storage (using go's bcrypt adaptive hashing)
+- 💾 Local-first, no cloud
+- 📋 Clipboard integration
+- 🧠 Easy to remember commands
+- 🧹 Simple user and platform cleanup
+
+
 ## Commands
 
     Easypass help
