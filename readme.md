@@ -7,6 +7,8 @@ Easypass is a command line tool that will allow you to generate, save, and retri
     Easypass help
 
 Lists all available commands and a short description of what they do
+`Easypass register <username`
+Registers given username. Will ask for a password after.
 
     Easypass login <username>
 
