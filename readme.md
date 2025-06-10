@@ -2,13 +2,21 @@
 
 Easypass is a command line tool that will allow you to generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords that are securely stored in the database so you can be assured they are safe.
 
+## Installation
+
+    go install github.com/rpowelson12/Easypass
+
+This installs the program within your PATH and allows you to use the commands anywhere in your file system.
+
 ## Commands
 
     Easypass help
 
 Lists all available commands and a short description of what they do
-`Easypass register <username`
-Registers given username. Will ask for a password after.
+
+    Easypass register <username>
+
+Registers given username. Will ask for a password before completing the registration.
 
     Easypass login <username>
 
@@ -41,9 +49,3 @@ Deletes the given username and deletes all their information
     Easypass update <platform name>
 
 Updates the password for the given platform and copies it to clipboard.
-
-## Installation
-
-    go install github.com/rpowelson12/Easypass
-
-This installs the program within your PATH and allows you to use the commands anywhere in your file system.
