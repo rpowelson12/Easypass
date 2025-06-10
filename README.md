@@ -1,6 +1,6 @@
 # Easypass
 
-Easypass is a command line tool that will allow you to generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords that are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
+Easypass is a command line tool that will allow you to generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
 
 ## Why Easypass?
 I kept getting crazy messages that my passwords that were saved on my browser were exposed in a data leak. I hate changing passwords because I can never remember if I updated them or not. I hated trying to think of new passwords for the many sites that I visited. I needed a tool that I could use to make my life easier so I created Easypass. With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
