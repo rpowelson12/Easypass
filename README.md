@@ -5,10 +5,10 @@
 
 Easypass is a command line tool that will allow you to generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
 
-## Why Easypass?
+## 💭 Why Easypass?
 After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
 
-## Installation
+## 📦 Installation
 
     go install github.com/rpowelson12/Easypass
 
@@ -45,7 +45,7 @@ $ Easypass get github
 Password copied to clipboard.
 ```
 
-## Commands
+## 💻 Commands
 
     Easypass help
 
@@ -93,3 +93,5 @@ Updates the password for the given platform and copies it to clipboard.
 - [PostgreSQL](https://www.postgresql.org/)
 - [pq](https://pkg.go.dev/github.com/lib/pq) (Postgres driver)
 
+## 👥 Contributions
+Have something you would like to add? Submit a PR and let me know! Thank you.
