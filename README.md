@@ -72,3 +72,10 @@ Deletes the given username and deletes all their information
     Easypass update <platform name>
 
 Updates the password for the given platform and copies it to clipboard.
+
+
+## 🛠 Built With
+- [Go](https://golang.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [pq](https://pkg.go.dev/github.com/lib/pq) (Postgres driver)
+
