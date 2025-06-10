@@ -13,7 +13,10 @@ This installs the program within your PATH and allows you to use the commands an
 
 ```{"db_url":"postgres://<system_name>:@localhost:5432/easypass?sslmode=disable","current_user_name":""}```
 
-Ensure there is a file named ```.easypassconfig.json``` in the root of your system with the above code pasted in.
+Ensure there is a file named:
+```.easypassconfig.json``` 
+in the root of your system with the above code pasted in. Ensure the postgres url is correct and set up with your system name and you can enter the database with that url with:
+```psql "postgres://<system_name>:@localhost:5432/easypass"```
 
 ## Commands
 
