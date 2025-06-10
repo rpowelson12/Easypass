@@ -93,8 +93,18 @@ Updates the password for the given platform and copies it to clipboard.
 - [PostgreSQL](https://www.postgresql.org/)
 - [pq](https://pkg.go.dev/github.com/lib/pq) (Postgres driver)
 
-## 👥 Contributions
-Have something you would like to add? Submit a PR and let me know! Thank you.
+## 🤝 Contributing
+
+### Clone the repo
+
+```bash
+git clone https://github.com/rpowelson12/Easypass@latest
+cd Easypass
+```
+
+### Submit a pull request
+
+If you'd like to contribute, please fork the repository and open a pull request to the `main` branch.
 
 ## 📄 License
 
