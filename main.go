@@ -20,6 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error reading config: %v", err)
 	}
+	cfg.EncryptionKey = ensureKeyFromEnv(".env")
 
 	db, err := sql.Open("postgres", cfg.DBURL)
 	if err != nil {

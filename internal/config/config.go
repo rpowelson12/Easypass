@@ -11,6 +11,7 @@ const configFileName = ".easypassconfig.json"
 type Config struct {
 	DBURL           string `json:"db_url"`
 	CurrentUserName string `json:"current_user_name"`
+	EncryptionKey   string `json:"encryption_key"`
 }
 
 func (cfg *Config) SetUser(userName string) error {

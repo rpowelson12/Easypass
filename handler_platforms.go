@@ -39,22 +39,23 @@ func handlerGenerate(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("cannot generate password: %v", err)
 	}
+	encrpytedPass := Encode(password, s.cfg.EncryptionKey)
+
 	user_id := user.ID
 	platform := cmd.Args[0]
 
-	platformObj, err := s.db.GeneratePassword(context.Background(), database.GeneratePasswordParams{
+	_, err = s.db.GeneratePassword(context.Background(), database.GeneratePasswordParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Platform:  platform,
-		Password:  password,
+		Password:  encrpytedPass,
 		UserID:    user_id,
 	})
 	if err != nil {
 		return fmt.Errorf("cannot generate platform object: %v", err)
 	}
-
-	copyToClipboard(platformObj.Password)
+	copyToClipboard(password)
 	return nil
 }
 
@@ -73,7 +74,9 @@ func handlerGetPassword(s *state, cmd command) error {
 		UserID:   user_id.ID,
 	})
 
-	copyToClipboard(password)
+	decryptedPass := Decrypt(password, s.cfg.EncryptionKey)
+
+	copyToClipboard(decryptedPass)
 	return nil
 }
 
@@ -122,8 +125,10 @@ func handlerUpdatePassword(s *state, cmd command) error {
 		return fmt.Errorf("cannot generate new password: %v", err)
 	}
 
+	encryptedPass := Encode(newPassword, s.cfg.EncryptionKey)
+
 	s.db.UpdatePassword(context.Background(), database.UpdatePasswordParams{
-		Password: newPassword,
+		Password: encryptedPass,
 		UserID:   user_id,
 	})
 	copyToClipboard(newPassword)

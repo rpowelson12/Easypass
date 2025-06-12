@@ -13,23 +13,28 @@ import (
 	"golang.org/x/term"
 )
 
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 4)
+	if err != nil {
+		return "", fmt.Errorf("cannot encrypt password: %v", err)
+	}
+
+	return string(hashedPassword), nil
+}
+
 func handlerRegister(s *state, cmd command) error {
 	if len(cmd.Args) != 1 {
 		return fmt.Errorf("usage: %v <name>", cmd.Name)
 	}
 	name := cmd.Args[0]
-	fmt.Print("Enter password:")
+	fmt.Print("Enter password:\n")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return fmt.Errorf("\nError reading password: %v\n", err)
 
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 4)
-	if err != nil {
-		return fmt.Errorf("cannot encrypt password: %v", err)
-	}
-
+	hashedPassword, err := HashPassword(string(password))
 	user, err := s.db.CreateUser(context.Background(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
@@ -46,7 +51,7 @@ func handlerRegister(s *state, cmd command) error {
 		return fmt.Errorf("couldn't set current user: %w", err)
 	}
 
-	fmt.Println("User created successfully:")
+	fmt.Println("User created successfully")
 	return nil
 }
 
