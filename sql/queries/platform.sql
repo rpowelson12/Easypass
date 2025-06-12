@@ -26,4 +26,8 @@ WHERE platform = $1;
 -- name: UpdatePassword :exec
 UPDATE platform
 SET password=$1
-WHERE user_id=$2;
+WHERE user_id=$2 AND platform=$3;
+
+-- name: GetPlatform :one
+SELECT * From platform
+WHERE platform = $1;

@@ -116,10 +116,19 @@ func handlerDeletePlatform(s *state, cmd command) error {
 }
 
 func handlerUpdatePassword(s *state, cmd command) error {
+	if len(cmd.Args) != 1 {
+		return fmt.Errorf("usage: %v <platform>", cmd.Name)
+	}
+	platform, err := s.db.GetPlatform(context.Background(), cmd.Args[0])
+	if err != nil {
+		return fmt.Errorf("could not get platform: %v", err)
+	}
+
 	user_id, err := s.db.GetUserId(context.Background(), s.cfg.CurrentUserName)
 	if err != nil {
 		return fmt.Errorf("cannot get user id: %v", err)
 	}
+
 	newPassword, err := generatePassword(16)
 	if err != nil {
 		return fmt.Errorf("cannot generate new password: %v", err)
@@ -130,6 +139,7 @@ func handlerUpdatePassword(s *state, cmd command) error {
 	s.db.UpdatePassword(context.Background(), database.UpdatePasswordParams{
 		Password: encryptedPass,
 		UserID:   user_id,
+		Platform: platform.Platform,
 	})
 	copyToClipboard(newPassword)
 	return nil
@@ -138,4 +148,11 @@ func handlerUpdatePassword(s *state, cmd command) error {
 func copyToClipboard(password string) {
 	fmt.Println("Password copied to clipboard!")
 	clipboard.WriteAll(password)
+
+	for i := 7; i > 0; i-- {
+		fmt.Printf("\rClipboard cleared in: %d seconds", i)
+		time.Sleep(time.Second)
+	}
+	clipboard.WriteAll("")
+	fmt.Println("\nClipboard cleared")
 }

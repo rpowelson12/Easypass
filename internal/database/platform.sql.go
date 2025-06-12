@@ -83,6 +83,25 @@ func (q *Queries) GetPassword(ctx context.Context, arg GetPasswordParams) (strin
 	return password, err
 }
 
+const getPlatform = `-- name: GetPlatform :one
+SELECT id, created_at, updated_at, platform, password, user_id From platform
+WHERE platform = $1
+`
+
+func (q *Queries) GetPlatform(ctx context.Context, platform string) (Platform, error) {
+	row := q.db.QueryRowContext(ctx, getPlatform, platform)
+	var i Platform
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Platform,
+		&i.Password,
+		&i.UserID,
+	)
+	return i, err
+}
+
 const getPlatforms = `-- name: GetPlatforms :many
 SELECT id, created_at, updated_at, platform, password, user_id FROM platform
 WHERE user_id = $1
@@ -121,15 +140,16 @@ func (q *Queries) GetPlatforms(ctx context.Context, userID uuid.UUID) ([]Platfor
 const updatePassword = `-- name: UpdatePassword :exec
 UPDATE platform
 SET password=$1
-WHERE user_id=$2
+WHERE user_id=$2 AND platform=$3
 `
 
 type UpdatePasswordParams struct {
 	Password string
 	UserID   uuid.UUID
+	Platform string
 }
 
 func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updatePassword, arg.Password, arg.UserID)
+	_, err := q.db.ExecContext(ctx, updatePassword, arg.Password, arg.UserID, arg.Platform)
 	return err
 }
