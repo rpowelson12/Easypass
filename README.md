@@ -34,56 +34,56 @@ Make sure to replace <your_username> with your system's PostgreSQL username. You
 
 ## 📺 Demo (Terminal Example)
 ```
-$ Easypass register alice
+$ easypass register alice
 Enter password:
 Registration successful!
 
-$ Easypass generate github
+$ easypass generate github
 Generated password copied to clipboard.
 
-$ Easypass get github
+$ easypass get github
 Password copied to clipboard.
 ```
 
 ## 💻 Commands
 
-    Easypass help
+    easypass help
 
 Lists all available commands and a short description of what they do
 
-    Easypass register <username>
+    easypass register <username>
 
 Registers given username. Will ask for a password before completing the registration.
 
-    Easypass login <username>
+    easypass login <username>
 
 Logs in the given username. Will ask for a password after.
 
-    Easypass users
+    easypass users
 
 Lists all users that are registered on your device.
 
-    Easypass generate <platform name>
+    easypass generate <platform name>
 
 Generates a password for the given platform and copies it to clipboard
 
-    Easypass get <platform name>
+    easypass get <platform name>
 
 Gets the password of given platform and copies it to clipboard.
 
-    Easypass platforms
+    easypass platforms
 
 Lists all platforms with a saved password for the currently logged in user
 
-    Easypass delete <platform>
+    easypass delete <platform>
 
 Deletes the platform and passwords for the current user
 
-    Easypass deactivate <username>
+    easypass deactivate <username>
 
 Deletes the given username and deletes all their information
 
-    Easypass update <platform name>
+    easypass update <platform name>
 
 Updates the password for the given platform and copies it to clipboard.
 
