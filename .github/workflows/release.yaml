@@ -49,6 +49,10 @@ jobs:
       - name: Upload release binaries
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+        name: "Easypass ${{ env.VERSION }}"
+        tag_name: ${{ env.VERSION }}
+        files: dist/*
+        draft: false
+        prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
