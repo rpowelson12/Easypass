@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GO111MODULE: on
-
+      VERSION: ${{ github.ref_name }}
+      OS: linux
+      ARCH: amd64
+      BINARY_NAME: easypass
+      ARCHIVE_NAME: easypass_${{ env.OS }}_${{ env.ARCH }}.tar.gz
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
