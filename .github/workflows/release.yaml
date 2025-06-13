@@ -32,7 +32,7 @@ jobs:
         run: |
           ARCHIVE_NAME="easypass_${OS}_${ARCH}.tar.gz"
           echo "Building version $VERSION"
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./cmd/easypass
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./
           tar -czf $ARCHIVE_NAME $BINARY_NAME
         env:
           VERSION: ${{ github.ref_name }}
