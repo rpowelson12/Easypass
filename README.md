@@ -8,7 +8,7 @@ Easypass is a command-line tool that lets you generate, save, and retrieve passw
 ## 💭 Why Easypass?
 After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
 
-### 📥 Install Easypass (macOS/Linux)
+### 📥 Install Easypass
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/install.sh | bash
