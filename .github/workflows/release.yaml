@@ -1,61 +1,52 @@
-name: Release Easypass
+name: Build and Release Easypass
 
 on:
   push:
     tags:
-      - "v*" # Triggers on version tags like v1.2.3
+      - "v*.*.*" # Triggers on tags like v1.2.3
+
+env:
+  VERSION: ${{ github.ref_name }}
 
 jobs:
   release:
-    name: Build and Release
+    name: Build and Release (${{ runner.os }}, ${{ matrix.arch }})
     runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ github.ref_name }}
-
     strategy:
       matrix:
-        goos: [linux, darwin, windows]
-        goarch: [amd64, arm64]
-        exclude:
-          - goarch: arm64
-            goos: windows # Windows ARM not supported well
+        goos: [linux]
+        arch: [amd64]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v4
         with:
-          go-version: "1.21"
+          go-version: "1.20"
 
-      - name: Set env vars
+      - name: Set environment variables
         run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "GOOS=${{ matrix.goos }}" >> $GITHUB_ENV
+          echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
+          echo "BINARY_NAME=easypass-${{ matrix.goos }}-${{ matrix.arch }}" >> $GITHUB_ENV
 
-      - name: Build binary
+      - name: Build Easypass
         run: |
-          mkdir -p dist
-          output_name="easypass-${{ matrix.goos }}-${{ matrix.goarch }}"
-          if [ "${{ matrix.goos }}" == "windows" ]; then
-            output_name="$output_name.exe"
-          fi
+          echo "Building version $VERSION"
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./easypass
 
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build \
-            -o dist/$output_name \
-            -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.Date=${DATE}" \
-            .
+      - name: Delete existing release (if exists)
+        run: |
+          gh release delete "$VERSION" --yes || echo "No existing release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload release binaries
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Easypass ${{ env.VERSION }}"
           tag_name: ${{ env.VERSION }}
-          files: dist/*
-          draft: false
-          prerelease: false
-          update_existing: true
+          name: "Easypass ${{ env.VERSION }}"
+          files: ${{ env.BINARY_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
