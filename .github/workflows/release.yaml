@@ -12,6 +12,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BINARY_BASE_NAME: easypass
+      VERSION: ${{ github.ref_name }}
     strategy:
       matrix:
         os: [linux, darwin]
@@ -28,18 +31,17 @@ jobs:
       - name: Build Easypass
         run: |
           echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
-          BINARY_NAME="${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
+          BINARY_NAME="${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}"
           go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o "$BINARY_NAME" ./
           tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "${{BINARY_BASE_NAME}}_${{ matrix.os }}_${{ matrix.arch }}"
+          name: ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}
           path: |
-            "${{BINARY_BASE_NAME}}_${{ matrix.os }}_${{ matrix.arch }}"
-            "${{BINARY_BASE_NAME}}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz"
-
+            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}
+            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
   release:
     needs: build
     runs-on: ubuntu-latest
