@@ -25,33 +25,16 @@ jobs:
         with:
           go-version: "1.24"
 
-      - name: Build Easypass
+      - name: Build Easypass binary and tarball
         run: |
           echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
-          BINARY_NAME="easypass_${{ matrix.os }}_${{ matrix.arch }}"
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o $BINARY_NAME ./
+          BINARY_NAME="${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o "$BINARY_NAME" ./
 
-          # Ensure the binary inside the tarball is always named 'easypass'
+          # Package with binary renamed to 'easypass' inside tarball
           tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
 
-      - name: Install GitHub CLI
-        run: |
-          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg |
-            sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |
-          sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt install gh -y
-
-      - name: Delete existing release and tag (if any)
-        run: |
-          gh release delete "$VERSION" --yes || echo "No existing release"
-          git tag -d "$VERSION" || echo "No local tag"
-          git push origin --delete "refs/tags/$VERSION" || echo "No remote tag"
-
-      - name: Upload Release Asset
+      - name: Create GitHub release and upload assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
@@ -59,6 +42,5 @@ jobs:
           files: |
             easypass_${{ matrix.os }}_${{ matrix.arch }}
             easypass_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
