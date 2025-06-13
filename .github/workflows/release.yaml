@@ -54,5 +54,6 @@ jobs:
           files: dist/*
           draft: false
           prerelease: false
+          update_existing: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
