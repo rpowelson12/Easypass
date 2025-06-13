@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"os/exec"
 	"syscall"
 	"time"
 
@@ -113,5 +115,21 @@ func handlerDeleteUser(s *state, cmd command) error {
 
 	fmt.Printf("Successfully deleted %s", userName)
 
+	return nil
+}
+
+func handlerUpgrade(s *state, cmd command) error {
+	fmt.Println("Upgrading easypass...")
+
+	modulePath := "github.com/rpowelson12/easypass@latest"
+
+	c := exec.Command("go", "install", modulePath)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+
+	if err := c.Run(); err != nil {
+		return fmt.Errorf("failed to upgrade easypass: %w", err)
+	}
+	fmt.Println("Upgraded easypass")
 	return nil
 }

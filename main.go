@@ -47,6 +47,7 @@ func main() {
 	cmds.register("deactivate", handlerDeleteUser)
 	cmds.register("help", handlerHelp)
 	cmds.register("update", handlerUpdatePassword)
+	cmds.register("upgrade", handlerUpgrade)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
