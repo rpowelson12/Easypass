@@ -51,6 +51,7 @@ func main() {
 	//TODO: Need to refactor commands so I can add a description as well
 	cmds.register("update", "Update password for given platform", handlerUpdatePassword)
 	cmds.register("upgrade", "Upgrade to the newest version of Easypass", handlerUpgrade)
+	cmds.register("version", "Print Easypass version info", handlerVersion)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
