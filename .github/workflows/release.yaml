@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Easypass binary
         run: |
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./cmd/easypass
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./
 
       - name: Create archive
         run: |
