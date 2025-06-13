@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - "v*" # Trigger on version tags
+      - "v*" # version tags
 
 env:
   BINARY_BASE_NAME: easypass
@@ -16,6 +16,9 @@ jobs:
       matrix:
         os: [linux, darwin, windows]
         arch: [amd64, arm64]
+    env:
+      EXT: ${{ matrix.os == 'windows' && '.exe' || '' }}
+      ARCHIVE_EXT: ${{ matrix.os == 'windows' && '.exe.zip' || '.tar.gz' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -28,17 +31,17 @@ jobs:
       - name: Build Easypass
         run: |
           echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
-          BINARY_NAME="${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}"
-          if [ "${{ matrix.os }}" = "windows" ]; then
-            BINARY_NAME="${BINARY_NAME}.exe"
-          fi
+
+          BINARY_NAME="${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}${{ env.EXT }}"
+
           export GOOS=${{ matrix.os }}
           export GOARCH=${{ matrix.arch }}
 
           COMMIT=$(git rev-parse HEAD)
-          DATE=$(date -u +%Y-%m-%d)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
           go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.Date=${DATE}" -o "$BINARY_NAME" ./
+
           if [ "${{ matrix.os }}" = "windows" ]; then
             zip "${BINARY_NAME}.zip" "$BINARY_NAME"
           else
@@ -50,8 +53,8 @@ jobs:
         with:
           name: ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}
           path: |
-            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}
-            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
+            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}${{ env.EXT }}
+            ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}${{ env.ARCHIVE_EXT }}
 
   release:
     needs: build
@@ -68,6 +71,5 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: Easypass ${{ env.VERSION }}
           files: ./artifacts/**/*
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
