@@ -43,5 +43,10 @@ jobs:
           files: |
             easypass_${{ matrix.os }}_${{ matrix.arch }}
             easypass_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
+      - name: Delete existing release and tag (if any)
+        run: |
+          gh release delete "$VERSION" --yes || echo "No existing release"
+          git tag -d "$VERSION" || echo "No local tag"
+          git push origin --delete "refs/tags/$VERSION" || echo "No remote tag"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
