@@ -121,7 +121,7 @@ func handlerDeleteUser(s *state, cmd command) error {
 func handlerUpgrade(s *state, cmd command) error {
 	fmt.Println("Upgrading easypass...")
 
-	modulePath := "github.com/rpowelson12/easypass@latest"
+	modulePath := "github.com/rpowelson12/Easypass@latest"
 
 	c := exec.Command("go", "install", modulePath)
 	c.Stdout = os.Stdout
