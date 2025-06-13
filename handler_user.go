@@ -118,7 +118,8 @@ func handlerDeleteUser(s *state, cmd command) error {
 }
 
 func handlerUpdate(s *state, cmd command) error {
-
+	fmt.Println("Updating easypass...")
 	exec.Command("bash", "-c", "curl -s https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/upgrade.sh | bash")
+	fmt.Println("Updated easypass")
 	return nil
 }

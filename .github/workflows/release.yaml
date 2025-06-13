@@ -4,10 +4,10 @@ on:
   push:
     tags:
       - "v*.*.*" # Triggers on tags like v1.2.3
-
 env:
   VERSION: ${{ github.ref_name }}
-
+  COMMIT: ${{ github.sha }}
+  DATE: ${{ github.event.head_commit.timestamp }}
 jobs:
   release:
     name: Build and Release ${{ matrix.arch }})
