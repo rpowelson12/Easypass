@@ -1,7 +1,7 @@
 package version
 
 var (
-	Version = "dev" // default fallback
-	Commit  = "none"
-	Date    = "unknown"
+	Version   = "dev" // default fallback
+	Commit    = "none"
+	BuildDate = "unknown"
 )
