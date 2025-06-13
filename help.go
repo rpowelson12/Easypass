@@ -14,6 +14,7 @@ func handlerHelp(s *state, cmd command) error {
 	delete: delets the provided platform
 	deactivate: deactivates provided user
 	update: generates a new password for given platform
+	upgrade: upgrade to the latest version
 	`)
 	return nil
 }
