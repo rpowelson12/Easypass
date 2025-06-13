@@ -33,6 +33,19 @@ jobs:
           tar czf "${BINARY_NAME}.tar.gz" "$BINARY_NAME"
         shell: bash
 
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Delete existing release and tag (if any)
+        run: |
+          gh release delete "$VERSION" --yes || echo "No existing release"
+          git tag -d "$VERSION" || echo "No local tag"
+          git push origin --delete "refs/tags/$VERSION" || echo "No remote tag"
+
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
@@ -42,16 +55,5 @@ jobs:
             easypass_${{ matrix.os }}_${{ matrix.arch }}
             easypass_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh
-      - name: Delete existing release and tag (if any)
-        run: |
-          gh release delete "$VERSION" --yes || echo "No existing release"
-          git tag -d "$VERSION" || echo "No local tag"
-          git push origin --delete "refs/tags/$VERSION" || echo "No remote tag"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
