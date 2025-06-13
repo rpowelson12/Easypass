@@ -11,7 +11,7 @@ After receiving multiple alerts about my browser-saved passwords being exposed i
 ### 📥 Install Easypass (macOS/Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/install.sh | bash
 ```
 Create a file named `.easypassconfig.json` in your home directory with the following content:
 
