@@ -83,11 +83,11 @@ Deletes the platform and passwords for the current user
 
 Deletes the given username and deletes all their information
 
-    easypass update <platform name>
+    easypass new <platform name>
 
 Updates the password for the given platform and copies it to clipboard.
 
-    easypass upgrade
+    easypass update
     
 Upgrades to the latest version of Easypass
 
