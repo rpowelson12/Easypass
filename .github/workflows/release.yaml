@@ -9,6 +9,8 @@ jobs:
   release:
     name: Build and Release
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.ref_name }}
 
     strategy:
       matrix:
