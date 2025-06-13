@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - "v*" # version tags
+      - "v*" # Trigger on version tags
 
 env:
   BINARY_BASE_NAME: easypass
@@ -12,9 +12,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      BINARY_BASE_NAME: easypass
-      VERSION: ${{ github.ref_name }}
     strategy:
       matrix:
         os: [linux, darwin]
@@ -32,8 +29,15 @@ jobs:
         run: |
           echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
           BINARY_NAME="${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}"
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} 
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=$(git rev-parse HEAD) -X github.com/rpowelson12/Easypass/internal/version.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" ...
+
+          export GOOS=${{ matrix.os }}
+          export GOARCH=${{ matrix.arch }}
+
+          COMMIT=$(git rev-parse HEAD)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.BuildDate=${DATE}" -o "$BINARY_NAME" ./
+
           tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
 
       - name: Upload build artifacts
@@ -43,6 +47,7 @@ jobs:
           path: |
             ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}
             ${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -58,5 +63,6 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: Easypass ${{ env.VERSION }}
           files: ./artifacts/**/*
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
