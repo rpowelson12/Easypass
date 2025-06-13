@@ -35,19 +35,22 @@ func main() {
 	}
 
 	cmds := commands{
-		registeredCommands: make(map[string]func(*state, command) error),
+		registeredCommands: make(map[string]commandEntry),
 	}
-	cmds.register("login", handlerLogin)
-	cmds.register("register", handlerRegister)
-	cmds.register("users", handlerListUsers)
-	cmds.register("generate", handlerGenerate)
-	cmds.register("get", handlerGetPassword)
-	cmds.register("platforms", handlerGetPlatforms)
-	cmds.register("delete", handlerDeletePlatform)
-	cmds.register("deactivate", handlerDeleteUser)
-	cmds.register("help", handlerHelp)
-	cmds.register("update", handlerUpdatePassword)
-	cmds.register("upgrade", handlerUpgrade)
+	cmds.register("login", "Log into a registered user account", handlerLogin)
+	cmds.register("register", "Register a new user", handlerRegister)
+	cmds.register("users", "List all registered users", handlerListUsers)
+	cmds.register("generate", "Generate a new password for the given platform", handlerGenerate)
+	cmds.register("get", "Get a password for the given platform", handlerGetPassword)
+	cmds.register("platforms", "List all platforms for current user", handlerGetPlatforms)
+	cmds.register("delete", "Delete given platform", handlerDeletePlatform)
+	cmds.register("deactivate", "Deactivate the given user", handlerDeleteUser)
+	cmds.register("help", "List all commands and descriptions", func(s *state, c command) error {
+		return handlerHelp(&cmds, s, c)
+	})
+	//TODO: Need to refactor commands so I can add a description as well
+	cmds.register("update", "Update password for given platform", handlerUpdatePassword)
+	cmds.register("upgrade", "Upgrade to the newest version of Easypass", handlerUpgrade)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
@@ -56,9 +59,9 @@ func main() {
 
 	cmdName := os.Args[1]
 	cmdArgs := os.Args[2:]
-
 	err = cmds.run(programState, command{Name: cmdName, Args: cmdArgs})
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }

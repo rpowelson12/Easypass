@@ -9,19 +9,27 @@ type command struct {
 	Args []string
 }
 
-type commands struct {
-	registeredCommands map[string]func(*state, command) error
+type commandEntry struct {
+	handler     func(*state, command) error
+	description string
 }
 
-func (c *commands) register(name string, f func(*state, command) error) {
-	c.registeredCommands[name] = f
+type commands struct {
+	registeredCommands map[string]commandEntry
+}
+
+func (c *commands) register(name string, description string, f func(*state, command) error) {
+	c.registeredCommands[name] = commandEntry{
+		handler:     f,
+		description: description,
+	}
 }
 
 func (c *commands) run(s *state, cmd command) error {
-	f, ok := c.registeredCommands[cmd.Name]
+	entry, ok := c.registeredCommands[cmd.Name]
 	if !ok {
 		return errors.New("Command not found")
 	}
 
-	return f(s, cmd)
+	return entry.handler(s, cmd)
 }
