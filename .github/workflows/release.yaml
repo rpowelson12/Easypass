@@ -36,7 +36,7 @@ jobs:
           COMMIT=$(git rev-parse HEAD)
           DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.BuildDate=${DATE}" -o "$BINARY_NAME" ./
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.Date=${DATE}" -o "$BINARY_NAME" ./
 
           tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
 
