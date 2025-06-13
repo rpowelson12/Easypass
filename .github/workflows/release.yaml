@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [linux, darwin]
+        os: [linux, darwin, windows]
         arch: [amd64, arm64]
 
     steps:
@@ -29,16 +29,21 @@ jobs:
         run: |
           echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
           BINARY_NAME="${{ env.BINARY_BASE_NAME }}_${{ matrix.os }}_${{ matrix.arch }}"
-
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            BINARY_NAME="${BINARY_NAME}.exe"
+          fi
           export GOOS=${{ matrix.os }}
           export GOARCH=${{ matrix.arch }}
 
           COMMIT=$(git rev-parse HEAD)
-          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          DATE=$(date -u +%Y-%m-%d)
 
           go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION} -X github.com/rpowelson12/Easypass/internal/version.Commit=${COMMIT} -X github.com/rpowelson12/Easypass/internal/version.Date=${DATE}" -o "$BINARY_NAME" ./
-
-          tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            zip "${BINARY_NAME}.zip" "$BINARY_NAME"
+          else
+            tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
