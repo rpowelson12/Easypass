@@ -87,6 +87,9 @@ Deletes the given username and deletes all their information
 
 Updates the password for the given platform and copies it to clipboard.
 
+    `easypass upgrade`
+Upgrades to the latest version of Easypass
+
 
 ## 🛠 Built With
 - [Go](https://golang.org/)
