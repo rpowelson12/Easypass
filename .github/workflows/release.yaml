@@ -27,10 +27,10 @@ jobs:
 
       - name: Build Easypass
         run: |
-          echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
-          BINARY_NAME="${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o $BINARY_NAME ./
-          tar czf "${BINARY_NAME}.tar.gz" "$BINARY_NAME"
+          echo "Building version $VERSION for ${{ matrix.os }}/${{ matrix.arch }}"
+          mkdir -p build
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o build/easypass .
+          tar -czf easypass_${{ matrix.os }}_${{ matrix.arch }}.tar.gz -C build easypass
         shell: bash
 
       - name: Install GitHub CLI
