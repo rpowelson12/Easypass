@@ -1,49 +1,39 @@
-name: Build and Release Easypass
+name: Release
 
 on:
   push:
     tags:
-      - "v*.*.*" # Triggers on tags like v1.2.3
-env:
-  VERSION: ${{ github.ref_name }}
-  COMMIT: ${{ github.sha }}
-  DATE: ${{ github.event.head_commit.timestamp }}
+      - "v*.*.*" # triggers on tags like v0.2.14
+
 jobs:
-  release:
-    name: Build and Release ${{ matrix.arch }})
+  build-and-release:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux]
-        arch: [amd64]
+    env:
+      GO111MODULE: on
 
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: "1.24"
+      - name: Checkout source
+        uses: actions/checkout@v3
 
       - name: Set environment variables
         run: |
-          echo "GOOS=${{ matrix.goos }}" >> $GITHUB_ENV
-          echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
-          echo "BINARY_NAME=easypass-${{ matrix.goos }}-${{ matrix.arch }}" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "OS=linux" >> $GITHUB_ENV
+          echo "ARCH=amd64" >> $GITHUB_ENV
+          echo "BINARY_NAME=easypass" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=easypass_${OS}_${ARCH}.tar.gz" >> $GITHUB_ENV
 
-      - name: Set platform
-        run: |
-          echo "OS=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-           echo "ARCH=$(uname -m)" >> $GITHUB_ENV
-           echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-           echo "BINARY_NAME=easypass_${OS}_${ARCH}" >> $GITHUB_ENV
-           echo "ARCHIVE_NAME=easypass_${OS}_${ARCH}.tar.gz" >> $GITHUB_ENV
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
 
-      - name: Build Easypass binary
+      - name: Build Easypass
         run: |
+          echo "Building version $VERSION"
           go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./
 
-      - name: Create archive
+      - name: Package Easypass
         run: |
           tar -czf $ARCHIVE_NAME $BINARY_NAME
 
@@ -53,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create GitHub Release and upload archive
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
