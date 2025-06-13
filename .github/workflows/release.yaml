@@ -41,6 +41,13 @@ jobs:
           files: |
             easypass_${{ matrix.os }}_${{ matrix.arch }}
             easypass_${{ matrix.os }}_${{ matrix.arch }}.tar.gz
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
       - name: Delete existing release and tag (if any)
         run: |
           gh release delete "$VERSION" --yes || echo "No existing release"
