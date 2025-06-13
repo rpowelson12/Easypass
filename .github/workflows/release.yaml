@@ -34,7 +34,7 @@ jobs:
       - name: Build Easypass
         run: |
           echo "Building version $VERSION"
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./easypass
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./
 
       - name: Delete existing release (if exists)
         run: |
