@@ -48,9 +48,8 @@ func main() {
 	cmds.register("help", "List all commands and descriptions", func(s *state, c command) error {
 		return handlerHelp(&cmds, s, c)
 	})
-	//TODO: Need to refactor commands so I can add a description as well
-	cmds.register("update", "Update password for given platform", handlerUpdatePassword)
-	cmds.register("upgrade", "Upgrade to the newest version of Easypass", handlerUpgrade)
+	cmds.register("new", "Update password for given platform", handlerUpdatePassword)
+	cmds.register("update", "Update to the newest version of Easypass", handlerUpdate)
 	cmds.register("version", "Print Easypass version info", handlerVersion)
 
 	if len(os.Args) < 2 {

@@ -118,8 +118,8 @@ func handlerDeleteUser(s *state, cmd command) error {
 	return nil
 }
 
-func handlerUpgrade(s *state, cmd command) error {
-	fmt.Println("Upgrading easypass...")
+func handlerUpdate(s *state, cmd command) error {
+	fmt.Println("Updating easypass...")
 
 	modulePath := "github.com/rpowelson12/Easypass@latest"
 
@@ -128,8 +128,8 @@ func handlerUpgrade(s *state, cmd command) error {
 	c.Stderr = os.Stderr
 
 	if err := c.Run(); err != nil {
-		return fmt.Errorf("failed to upgrade easypass: %w", err)
+		return fmt.Errorf("failed to update easypass: %w", err)
 	}
-	fmt.Println("Upgraded easypass")
+	fmt.Println("Updated easypass")
 	return nil
 }
