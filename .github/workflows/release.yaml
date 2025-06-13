@@ -31,10 +31,21 @@ jobs:
           echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
           echo "BINARY_NAME=easypass-${{ matrix.goos }}-${{ matrix.arch }}" >> $GITHUB_ENV
 
-      - name: Build Easypass
+      - name: Set platform
         run: |
-          echo "Building version $VERSION"
-          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./
+          echo "OS=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+           echo "ARCH=$(uname -m)" >> $GITHUB_ENV
+           echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+           echo "BINARY_NAME=easypass_${OS}_${ARCH}" >> $GITHUB_ENV
+           echo "ARCHIVE_NAME=easypass_${OS}_${ARCH}.tar.gz" >> $GITHUB_ENV
+
+      - name: Build Easypass binary
+        run: |
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=$VERSION" -o $BINARY_NAME ./cmd/easypass
+
+      - name: Create archive
+        run: |
+          tar -czf $ARCHIVE_NAME $BINARY_NAME
 
       - name: Delete existing release (if exists)
         run: |
@@ -42,11 +53,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release and upload archive
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
           name: "Easypass ${{ env.VERSION }}"
-          files: ${{ env.BINARY_NAME }}
+          files: ${{ env.ARCHIVE_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
