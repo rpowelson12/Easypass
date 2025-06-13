@@ -10,7 +10,7 @@ env:
 
 jobs:
   release:
-    name: Build and Release (${{ runner.os }}, ${{ matrix.arch }})
+    name: Build and Release ${{ matrix.arch }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
