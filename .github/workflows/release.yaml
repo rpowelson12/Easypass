@@ -17,28 +17,31 @@ jobs:
         os: [linux, darwin]
         arch: [amd64, arm64]
 
-      steps:
-        - uses: actions/checkout@v3
+    outputs:
+      # We won't pass outputs here, just upload artifacts
 
-        - name: Set up Go
-          uses: actions/setup-go@v4
-          with:
-            go-version: "1.24"
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: Build Easypass
-          run: |
-            echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
-            BINARY_NAME="${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
-            go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o "$BINARY_NAME" ./
-            tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
 
-        - name: Upload build artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
-            path: |
-              "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
-              "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz"
+      - name: Build Easypass
+        run: |
+          echo "Building version $VERSION for ${{ matrix.os }}/ ${{ matrix.arch }}"
+          BINARY_NAME="${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
+          go build -ldflags "-X github.com/rpowelson12/Easypass/internal/version.Version=${VERSION}" -o "$BINARY_NAME" ./
+          tar -czvf "${BINARY_NAME}.tar.gz" --transform "s|${BINARY_NAME}|easypass|" "$BINARY_NAME"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
+          path: |
+            "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}"
+            "${BINARY_BASE_NAME}_${{ matrix.os }}_${{ matrix.arch }}.tar.gz"
 
   release:
     needs: build
