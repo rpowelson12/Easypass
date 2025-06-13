@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"syscall"
 	"time"
@@ -118,8 +119,19 @@ func handlerDeleteUser(s *state, cmd command) error {
 }
 
 func handlerUpdate(s *state, cmd command) error {
-	fmt.Println("Updating easypass...")
-	exec.Command("bash", "-c", "curl -s https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/upgrade.sh | bash")
-	fmt.Println("Updated easypass")
+
+	fmt.Println("Upgrading Easypass...")
+
+	modulePath := "github.com/rpowelson12/Easypass@latest"
+
+	c := exec.Command("go", "install", modulePath)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+
+	if err := c.Run(); err != nil {
+		return fmt.Errorf("failed to upgrade Easypass: %w", err)
+	}
+
+	fmt.Println("Easypass upgraded!")
 	return nil
 }
