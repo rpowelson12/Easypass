@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/rpowelson12/Easypass/internal/version"
 )
 
