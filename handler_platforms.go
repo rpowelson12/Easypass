@@ -73,6 +73,9 @@ func handlerGetPassword(s *state, cmd command) error {
 		Platform: platform,
 		UserID:   user_id.ID,
 	})
+	if err != nil {
+		return fmt.Errorf("cannot get password: %v", err)
+	}
 
 	decryptedPass := Decrypt(password, s.cfg.EncryptionKey)
 
@@ -91,6 +94,9 @@ func handlerGetPlatforms(s *state, cmd command) error {
 	}
 
 	platforms, err := s.db.GetPlatforms(context.Background(), user_id)
+	if err != nil {
+		return fmt.Errorf("cannot get platforms: %v", err)
+	}
 
 	for _, platform := range platforms {
 		fmt.Println(platform.Platform)

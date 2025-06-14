@@ -37,6 +37,9 @@ func handlerRegister(s *state, cmd command) error {
 	}
 
 	hashedPassword, err := HashPassword(string(password))
+	if err != nil {
+		return fmt.Errorf("cannot hash password: %v", err)
+	}
 	user, err := s.db.CreateUser(context.Background(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
