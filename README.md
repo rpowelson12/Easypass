@@ -60,18 +60,6 @@ easypass get github
 ![Easypass Demo](demo.gif)
 
 
-```
-$ easypass register alice
-Enter password:
-Registration successful!
-
-$ easypass generate github
-Generated password copied to clipboard.
-
-$ easypass get github
-Password copied to clipboard.
-```
-
 ## 💻 Commands
 
     easypass help
