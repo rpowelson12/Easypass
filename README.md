@@ -1,5 +1,6 @@
 ![Go](https://img.shields.io/badge/Go-1.20+-00ADD8)
 ![License](https://img.shields.io/badge/license-MIT-green)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rpowelson12/Easypass)](https://goreportcard.com/report/github.com/rpowelson12/Easypass)
 ## 📚 Table of Contents
 
 - [Why Easypass?](#-why-easypass)
