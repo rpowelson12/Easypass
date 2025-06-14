@@ -56,6 +56,10 @@ easypass get github
 - 🧹 Simple user and platform cleanup
 
 ## 📺 Demo (Terminal Example)
+
+![Easypass Demo](demo.gif)
+
+
 ```
 $ easypass register alice
 Enter password:
