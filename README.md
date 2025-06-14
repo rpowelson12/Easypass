@@ -21,7 +21,7 @@ After receiving multiple alerts about my browser-saved passwords being exposed i
 - [License](#-license)
 
 ### 📥 Install Easypass
-
+This command runs the install script which determines your OS, installs the correct version for your system, and allows you to use Easypass all in one command!
 ```bash
 curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/install.sh | bash
 
@@ -35,6 +35,16 @@ Create a file named `.easypassconfig.json` in your home directory with the follo
 Make sure to replace <your_username> with your system's PostgreSQL username. You can verify your connection with:
 
 ```psql "postgres://<your_username>:@localhost:5432/easypass"```
+
+
+## ⚡ Quick Start
+
+```bash
+easypass register yourname
+easypass login yourname
+easypass generate github
+easypass get github
+
 
 
 ## ✨ Features
