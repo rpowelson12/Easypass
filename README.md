@@ -1,13 +1,5 @@
 ![Go](https://img.shields.io/badge/Go-1.20+-00ADD8)
 ![License](https://img.shields.io/badge/license-MIT-green)
-
-# Easypass
-
-Easypass is a command-line tool that lets you generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
-
-## 💭 Why Easypass?
-After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
-
 ## 📚 Table of Contents
 
 - [Why Easypass?](#-why-easypass)
@@ -19,6 +11,15 @@ After receiving multiple alerts about my browser-saved passwords being exposed i
 - [Built With](#-built-with)
 - [Contributing](#-contributing)
 - [License](#-license)
+
+  
+# Easypass
+
+Easypass is a command-line tool that lets you generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
+
+## 💭 Why Easypass?
+After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
+
 
 ### 📥 Install Easypass
 This command runs the install script which determines your OS, installs the correct version for your system, and allows you to use Easypass all in one command!
