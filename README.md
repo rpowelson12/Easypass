@@ -44,7 +44,7 @@ easypass register yourname
 easypass login yourname
 easypass generate github
 easypass get github
-
+```
 
 
 ## ✨ Features
