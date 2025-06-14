@@ -49,7 +49,7 @@ easypass get github
 
 
 ## ✨ Features
-- 🔐 Secure password storage (using go's bcrypt adaptive hashing)
+- 🔐 Secure password storage (AES 256 encryption)
 - 💾 Local-first, no cloud
 - 📋 Clipboard integration
 - 🧠 Easy to remember commands
