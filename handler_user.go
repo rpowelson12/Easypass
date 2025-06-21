@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -130,20 +131,24 @@ func handlerDeleteUser(s *state, cmd command) error {
 }
 
 func handlerUpdate(s *state, cmd command) error {
+	fmt.Println("🔄 Running Easypass upgrade script...")
 
-	fmt.Println("Updating Easypass...")
+	// Get the current working directory where `go run .` was executed
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get working directory: %w", err)
+	}
 
-	modulePath := "github.com/rpowelson12/Easypass@latest"
+	// Point to the script in ./internal/scripts
+	scriptPath := filepath.Join(wd, "scripts", "upgrade.sh")
 
-	c := exec.Command("go", "install", modulePath)
+	c := exec.Command("bash", scriptPath)
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 
 	if err := c.Run(); err != nil {
-		return fmt.Errorf("failed to upgrade Easypass: %w", err)
+		return fmt.Errorf("failed to execute upgrade script: %w", err)
 	}
 
-	fmt.Println("Easypass upgraded!")
-	checkVersions()
 	return nil
 }

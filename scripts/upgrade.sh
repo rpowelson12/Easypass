@@ -12,13 +12,22 @@ elif [[ "$ARCH" == "arm64" || "$ARCH" == "aarch64" ]]; then
   ARCH="arm64"
 fi
 
-BINARY="easypass-$OS-$ARCH"
+BINARY="easypass_${OS}_${ARCH}"
 URL="https://github.com/rpowelson12/Easypass/releases/latest/download/$BINARY"
 
-echo "Downloading latest Easypass from $URL..."
-curl -L -o easypass "$URL"
-chmod +x easypass
-sudo mv easypass /usr/local/bin/easypass
+echo "📦 Downloading latest Easypass from $URL..."
 
-echo "Easypass upgraded!"
-easypass version
+TMP=$(mktemp)
+curl -fsSL -o "$TMP" "$URL"
+
+if [[ ! -s "$TMP" ]]; then
+  echo "❌ Download failed or binary is empty."
+  exit 1
+fi
+
+chmod +x "$TMP"
+
+echo "🔁 Replacing existing Easypass binary..."
+sudo mv "$TMP" /usr/local/bin/easypass
+
+echo "✅ Easypass upgraded!"
