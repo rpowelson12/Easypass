@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
-	"os/exec"
-	"path/filepath"
+	"runtime"
 	"syscall"
 	"time"
 
@@ -131,24 +132,92 @@ func handlerDeleteUser(s *state, cmd command) error {
 }
 
 func handlerUpdate(s *state, cmd command) error {
-	fmt.Println("🔄 Running Easypass upgrade script...")
+	fmt.Println("🔄 Updating Easypass from latest GitHub release...")
 
-	// Get the current working directory where `go run .` was executed
-	wd, err := os.Getwd()
+	// Determine OS and Arch for the binary name
+	osName := runtime.GOOS
+	arch := runtime.GOARCH
+
+	// Normalize arch to match your binary naming
+	if arch == "amd64" {
+		arch = "amd64"
+	} else if arch == "arm64" || arch == "aarch64" {
+		arch = "arm64"
+	} else {
+		return fmt.Errorf("unsupported architecture: %s", arch)
+	}
+
+	binaryName := fmt.Sprintf("easypass_%s_%s", osName, arch)
+
+	// GitHub latest release download URL
+	url := fmt.Sprintf("https://github.com/rpowelson12/Easypass/releases/latest/download/%s", binaryName)
+
+	fmt.Printf("📦 Downloading %s...\n", url)
+
+	// Download binary to temp file
+	resp, err := http.Get(url)
 	if err != nil {
-		return fmt.Errorf("failed to get working directory: %w", err)
+		return fmt.Errorf("failed to download binary: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("failed to download binary, status: %s", resp.Status)
 	}
 
-	// Point to the script in ./internal/scripts
-	scriptPath := filepath.Join(wd, "scripts", "upgrade.sh")
-
-	c := exec.Command("bash", scriptPath)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-
-	if err := c.Run(); err != nil {
-		return fmt.Errorf("failed to execute upgrade script: %w", err)
+	tmpFile, err := os.CreateTemp("", "easypass-update-*")
+	if err != nil {
+		return fmt.Errorf("failed to create temp file: %w", err)
 	}
+	defer os.Remove(tmpFile.Name())
+
+	_, err = io.Copy(tmpFile, resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to write to temp file: %w", err)
+	}
+
+	if err := tmpFile.Chmod(0755); err != nil {
+		return fmt.Errorf("failed to set executable permission: %w", err)
+	}
+
+	if err := tmpFile.Close(); err != nil {
+		return fmt.Errorf("failed to close temp file: %w", err)
+	}
+
+	// Find current executable path
+	execPath, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("failed to find current executable: %w", err)
+	}
+
+	// Backup current executable (optional)
+	backupPath := execPath + ".bak"
+	err = copyFile(execPath, backupPath)
+	if err != nil {
+		return fmt.Errorf("failed to backup current executable: %w", err)
+	}
+
+	// Replace current executable with new binary
+	err = os.Rename(tmpFile.Name(), execPath)
+	if err != nil {
+		// Might fail due to permissions, try to copy manually
+		err = copyFile(tmpFile.Name(), execPath)
+		if err != nil {
+			return fmt.Errorf("failed to replace executable: %w", err)
+		}
+	}
+
+	fmt.Println("✅ Easypass upgraded successfully!")
 
 	return nil
+}
+
+// copyFile copies src to dst (overwrites if exists)
+func copyFile(src, dst string) error {
+	input, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(dst, input, 0755)
+	return err
 }
