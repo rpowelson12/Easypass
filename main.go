@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -20,6 +21,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("error reading config: %v", err)
 	}
+
+	fmt.Println("DB URL:", cfg.DBURL)
 	cfg.KEY = ensureKeyFromEnv(".env")
 
 	db, err := sql.Open("postgres", cfg.DBURL)
