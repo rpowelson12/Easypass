@@ -1,25 +1,39 @@
 package config
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
+	//"encoding/json"
+	//"os"
+	//"path/filepath"
+
+	"github.com/caarlos0/env/v10"
+	"github.com/joho/godotenv"
 )
 
 const configFileName = ".easypassconfig.json"
 
 type Config struct {
-	DBURL           string `json:"db_url"`
-	CurrentUserName string `json:"current_user_name"`
-	EncryptionKey   string `json:"encryption_key"`
+	KEY             string `env:"ENCRYPTION_KEY"`
+	DBURL           string `env:"DB_URL"`
+	CurrentUserName string `env:"CURRENT_USER"`
 }
 
-func (cfg *Config) SetUser(userName string) error {
+func Load() (*Config, error) {
+
+	_ = godotenv.Load()
+
+	cfg := &Config{}
+
+	if err := env.Parse(cfg); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+func (cfg *Config) SetUser(userName string) {
 	cfg.CurrentUserName = userName
-	return write(*cfg)
 }
 
-func Read() (Config, error) {
+/*func Read() (Config, error) {
 	fullPath, err := getConfigFilePath()
 	if err != nil {
 		return Config{}, err
@@ -70,3 +84,4 @@ func write(cfg Config) error {
 
 	return nil
 }
+*/
