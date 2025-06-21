@@ -1,6 +1,7 @@
 ![Go](https://img.shields.io/badge/Go-1.20+-00ADD8)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rpowelson12/Easypass)](https://goreportcard.com/report/github.com/rpowelson12/Easypass)
+
 ## 📚 Table of Contents
 
 - [Why Easypass?](#-why-easypass)
@@ -13,31 +14,36 @@
 - [Contributing](#-contributing)
 - [License](#-license)
 
-  
 # Easypass
 
 Easypass is a command-line tool that lets you generate, save, and retrieve passwords for any platform, website, or anything else that you need a password for. All passwords are encrypted and securely stored in a local database so you can be assured they are safe. Passwords that are generated, updated or retrieved are automatically copied to the clipboard for easy pasting and no transcription errors.
 
 ## 💭 Why Easypass?
-After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally. 
 
+After receiving multiple alerts about my browser-saved passwords being exposed in data leaks, I realized I needed a safer solution. I hated managing password updates and coming up with new ones for every site. I needed a tool that I could use to make my life easier. Easypass was born! With Easypass, I don't have to expose saved passwords online. I don't have to worry about my passwords getting exposed and if they are, I can easily update and manage them locally.
 
 ### 📥 Install Easypass
+
 This command runs the install script which determines your OS, installs the correct version for your system, and allows you to use Easypass all in one command!
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/install.sh | bash
 
 ```
+
+As of v0.3, json config should have been phased out. If you are still having to create a json file, please submit and issue! Thank you
 Create a file named `.easypassconfig.json` in your home directory with the following content:
 
 ```json
-{"db_url":"postgres://<your_username>:@localhost:5432/easypass?sslmode=disable","current_user_name":""}
+{
+  "db_url": "postgres://<your_username>:@localhost:5432/easypass?sslmode=disable",
+  "current_user_name": ""
+}
 ```
 
 Make sure to replace <your_username> with your system's PostgreSQL username. You can verify your connection with:
 
-```psql "postgres://<your_username>:@localhost:5432/easypass"```
-
+`psql "postgres://<your_username>:@localhost:5432/easypass"`
 
 ## ⚡ Quick Start
 
@@ -48,8 +54,8 @@ easypass generate github
 easypass get github
 ```
 
-
 ## ✨ Features
+
 - 🔐 Secure password storage (AES 256 encryption)
 - 💾 Local-first, no cloud
 - 📋 Clipboard integration
@@ -59,7 +65,6 @@ easypass get github
 ## 📺 Demo (Terminal Example)
 
 ![Easypass Demo](demo.gif)
-
 
 ## 💻 Commands
 
@@ -104,11 +109,11 @@ Deletes the given username and deletes all their information
 Updates the password for the given platform and copies it to clipboard.
 
     easypass update
-    
+
 Upgrades to the latest version of Easypass
 
-
 ## 🛠 Built With
+
 - [Go](https://golang.org/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [pq](https://pkg.go.dev/github.com/lib/pq) (Postgres driver)
@@ -129,4 +134,3 @@ If you'd like to contribute, please fork the repository and open a pull request 
 ## 📄 License
 
 This project is licensed under the MIT License.
-
