@@ -53,13 +53,11 @@ func handlerRegister(s *state, cmd command) error {
 		return fmt.Errorf("couldn't create user: %w", err)
 	}
 
-	//err = s.cfg.SetUser(user.Name)
-	s.cfg.SetUser(user.Name)
-	/*
-		if err != nil {
-			return fmt.Errorf("couldn't set current user: %w", err)
-		}
-	*/
+	err = s.cfg.SetUser(user.Name)
+
+	if err != nil {
+		return fmt.Errorf("couldn't set current user: %w", err)
+	}
 
 	fmt.Println("User created successfully")
 	checkVersions()
@@ -87,12 +85,10 @@ func handlerLogin(s *state, cmd command) error {
 	if result != nil {
 		return errors.New("Incorrect user or password")
 	}
-	s.cfg.SetUser(name)
-	/*
-		if err != nil {
-			return fmt.Errorf("couldn't set current user: %w", err)
-		}
-	*/
+	err = s.cfg.SetUser(name)
+	if err != nil {
+		return fmt.Errorf("couldn't set current user: %w", err)
+	}
 
 	fmt.Println("User switched successfully")
 	checkVersions()
@@ -188,13 +184,6 @@ func handlerUpdate(s *state, cmd command) error {
 	execPath, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("failed to find current executable: %w", err)
-	}
-
-	// Backup current executable (optional)
-	backupPath := execPath + ".bak"
-	err = copyFile(execPath, backupPath)
-	if err != nil {
-		return fmt.Errorf("failed to backup current executable: %w", err)
 	}
 
 	// Replace current executable with new binary
