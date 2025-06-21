@@ -56,6 +56,7 @@ func handlerGenerate(s *state, cmd command) error {
 		return fmt.Errorf("cannot generate platform object: %v", err)
 	}
 	copyToClipboard(password)
+	checkVersions()
 	return nil
 }
 
@@ -80,6 +81,7 @@ func handlerGetPassword(s *state, cmd command) error {
 	decryptedPass := Decrypt(password, s.cfg.KEY)
 
 	copyToClipboard(decryptedPass)
+	checkVersions()
 	return nil
 }
 
@@ -102,6 +104,8 @@ func handlerGetPlatforms(s *state, cmd command) error {
 		fmt.Println(platform.Platform)
 	}
 
+	checkVersions()
+
 	return nil
 }
 
@@ -118,6 +122,7 @@ func handlerDeletePlatform(s *state, cmd command) error {
 	}
 	fmt.Printf("%s deleted successfully", platform)
 
+	checkVersions()
 	return nil
 }
 
@@ -148,6 +153,7 @@ func handlerUpdatePassword(s *state, cmd command) error {
 		Platform: platform.Platform,
 	})
 	copyToClipboard(newPassword)
+	checkVersions()
 	return nil
 }
 

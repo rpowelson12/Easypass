@@ -60,6 +60,7 @@ func handlerRegister(s *state, cmd command) error {
 	*/
 
 	fmt.Println("User created successfully")
+	checkVersions()
 	return nil
 }
 
@@ -92,6 +93,7 @@ func handlerLogin(s *state, cmd command) error {
 	*/
 
 	fmt.Println("User switched successfully")
+	checkVersions()
 	return nil
 }
 
@@ -107,6 +109,7 @@ func handlerListUsers(s *state, cmd command) error {
 		}
 		fmt.Printf("* %v\n", user.Name)
 	}
+	checkVersions()
 	return nil
 }
 
@@ -141,5 +144,6 @@ func handlerUpdate(s *state, cmd command) error {
 	}
 
 	fmt.Println("Easypass upgraded!")
+	checkVersions()
 	return nil
 }
