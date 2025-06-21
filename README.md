@@ -31,7 +31,6 @@ curl -fsSL https://raw.githubusercontent.com/rpowelson12/Easypass/main/scripts/i
 
 ```
 
-As of v0.3, json config should have been phased out. If you are still having to create a json file, please submit and issue! Thank you
 Create a file named `.easypassconfig.json` in your home directory with the following content:
 
 ```json
