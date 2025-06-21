@@ -16,12 +16,12 @@ type state struct {
 }
 
 func main() {
-	cfg, err := config.Load()
+	cfg, err := config.Read()
 	if err != nil {
 		log.Fatalf("error reading config: %v", err)
 	}
 
-	cfg.KEY = ensureKeyFromEnv(".env")
+	cfg.EncryptionKey = ensureKeyFromEnv(".env")
 
 	db, err := sql.Open("postgres", cfg.DBURL)
 	if err != nil {
@@ -32,7 +32,7 @@ func main() {
 
 	programState := &state{
 		db:  dbQueries,
-		cfg: cfg,
+		cfg: &cfg,
 	}
 
 	cmds := commands{

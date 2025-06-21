@@ -39,7 +39,7 @@ func handlerGenerate(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("cannot generate password: %v", err)
 	}
-	encrpytedPass := Encode(password, s.cfg.KEY)
+	encrpytedPass := Encode(password, s.cfg.EncryptionKey)
 
 	user_id := user.ID
 	platform := cmd.Args[0]
@@ -78,7 +78,7 @@ func handlerGetPassword(s *state, cmd command) error {
 		return fmt.Errorf("cannot get password: %v", err)
 	}
 
-	decryptedPass := Decrypt(password, s.cfg.KEY)
+	decryptedPass := Decrypt(password, s.cfg.EncryptionKey)
 
 	copyToClipboard(decryptedPass)
 	checkVersions()
@@ -145,7 +145,7 @@ func handlerUpdatePassword(s *state, cmd command) error {
 		return fmt.Errorf("cannot generate new password: %v", err)
 	}
 
-	encryptedPass := Encode(newPassword, s.cfg.KEY)
+	encryptedPass := Encode(newPassword, s.cfg.EncryptionKey)
 
 	s.db.UpdatePassword(context.Background(), database.UpdatePasswordParams{
 		Password: encryptedPass,

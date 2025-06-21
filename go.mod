@@ -14,6 +14,5 @@ require (
 )
 
 require (
-	github.com/caarlos0/env/v10 v10.0.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 )
