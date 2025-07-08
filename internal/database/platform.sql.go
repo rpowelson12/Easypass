@@ -12,6 +12,39 @@ import (
 	"github.com/google/uuid"
 )
 
+const addPassword = `-- name: AddPassword :exec
+INSERT INTO platform (id, created_at, updated_at, platform, password, user_id)
+VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6
+)
+`
+
+type AddPasswordParams struct {
+	ID        uuid.UUID
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Platform  string
+	Password  string
+	UserID    uuid.UUID
+}
+
+func (q *Queries) AddPassword(ctx context.Context, arg AddPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, addPassword,
+		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.Platform,
+		arg.Password,
+		arg.UserID,
+	)
+	return err
+}
+
 const deletePlatform = `-- name: DeletePlatform :exec
 DELETE FROM platform
 WHERE platform = $1

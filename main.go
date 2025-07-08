@@ -52,6 +52,7 @@ func main() {
 	cmds.register("new", "Update password for given platform", handlerUpdatePassword)
 	cmds.register("update", "Update to the newest version of Easypass", handlerUpdate)
 	cmds.register("version", "Print Easypass version info", handlerVersion)
+	cmds.register("add", "Add an existing password", handlerAdd)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")

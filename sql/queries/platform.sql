@@ -31,3 +31,14 @@ WHERE user_id=$2 AND platform=$3;
 -- name: GetPlatform :one
 SELECT * From platform
 WHERE platform = $1;
+
+-- name: AddPassword :exec
+INSERT INTO platform (id, created_at, updated_at, platform, password, user_id)
+VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6
+);

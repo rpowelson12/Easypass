@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+	"os"
 	"time"
 
 	"github.com/atotto/clipboard"
@@ -154,6 +155,33 @@ func handlerUpdatePassword(s *state, cmd command) error {
 	})
 	copyToClipboard(newPassword)
 	checkVersions()
+	return nil
+}
+
+func handlerAdd(s *state, cmd command) error {
+	if len(cmd.Args) != 2 {
+		return fmt.Errorf("usage: easypass add <platform> <password>")
+	}
+	platform := cmd.Args[0]
+	password := cmd.Args[1]
+
+	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("cannot get user id: %v", err)
+	}
+
+	encodedPassword := Encode(password, os.Getenv("ENCRYPTION_KEY"))
+
+	fmt.Println("Adding password")
+	s.db.AddPassword(context.Background(), database.AddPasswordParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		Platform:  platform,
+		Password:  encodedPassword,
+		UserID:    user.ID,
+	})
+	fmt.Printf("Added password for: %s", platform)
 	return nil
 }
 
